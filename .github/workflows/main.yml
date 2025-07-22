@@ -21,7 +21,8 @@ jobs:
             cd /var/www/api.lanny.dev
             find . -mindepth 1 ! -name '.env' -exec rm -rf {} +
             git clone https://github.com/Luminate-D/lannydev-api.git
+            cp .env lannydev-api/.env
             cd lannydev-api
             yarn install
             yarn build
-            pm2 restart lannydevapi || pm2 start main.js --name lannydevapi
+            pm2 restart lannydevapi || pm2 start dist/main.js --name lannydevapi

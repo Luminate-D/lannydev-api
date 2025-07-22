@@ -25,6 +25,17 @@ jobs:
       - name: Build
         run: yarn build
 
+      - name: Clean deployment directory except .env
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.REMOTE_KEY }}
+          port: 22
+          script: |
+            cd /var/www/api.lanny.dev
+            find . -mindepth 1 ! -name '.env' -exec rm -rf {} +
+
       - name: Deploy
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -32,7 +43,6 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.REMOTE_KEY }}
           port: 22
-          rm: true
           strip_components: 1
           source: "dist/"
           target: "/var/www/api.lanny.dev/"
